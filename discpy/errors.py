@@ -7,3 +7,13 @@ class BadRequest(Exception):
         pass
     def __str__(self):
         return "Error 400 Bad Request"
+
+
+class RequestTimeout(Exception):
+    '''
+    This error is thrown when a request timeout occurs
+    '''
+    def __int__(self):
+        pass
+    def __str__(self):
+        return "Webhook request has timed out!"
