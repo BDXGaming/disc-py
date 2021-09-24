@@ -1,8 +1,9 @@
 import json
 import requests
+from requests import Timeout
 
 from discpy import Embed
-from discpy.errors import BadRequest
+from discpy.errors import BadRequest, RequestTimeout
 from discpy.webhooks.message import Message
 
 
@@ -78,8 +79,10 @@ class webhook(webhookMeta):
         if (view_raw_data == True):
             print(data)
 
-
-        result = requests.post(url=self.address, json=data)
+        try:
+            result = requests.post(url=self.address, json=data, timeout=2)
+        except Timeout:
+            raise RequestTimeout
 
         if result.status_code != 204:
             print(result)
