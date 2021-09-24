@@ -2,6 +2,7 @@ import json
 import requests
 
 from discpy import Embed
+from discpy.errors import BadRequest
 from discpy.webhooks.message import Message
 
 
@@ -83,6 +84,9 @@ class webhook(webhookMeta):
         if result.status_code != 204:
             print(result)
 
+            if(result.status_code == 400):
+                raise BadRequest
+
         return sentWebhook(address=self.address, data=data, message=message, response=result)
 
 class sentWebhook(webhook):
@@ -97,5 +101,5 @@ class sentWebhook(webhook):
 
         self.message = kwargs["message"]
         self.data = kwargs["data"]
-        self.resp = kwargs['response']
+        self.response = kwargs['response']
 
