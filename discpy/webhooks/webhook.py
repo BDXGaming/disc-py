@@ -1,7 +1,6 @@
-import json
 import requests
 from requests import Timeout
-
+from discpy.user import baseUser
 from discpy import Embed
 from discpy.errors import BadRequest, RequestTimeout
 from discpy.webhooks.message import Message
@@ -40,8 +39,7 @@ class webhook(webhookMeta):
         :param avatar_url:
         '''
         super().__init__(address=address)
-        self.username = username
-        self.avatar_url = avatar_url
+        self.user = baseUser(username= username, avatar_url = avatar_url)
 
     def change_url(self, new_url):
         '''
@@ -62,11 +60,11 @@ class webhook(webhookMeta):
 
             data = message.to_dict()
 
-            if (data["username"] == None and self.username !=None):
-                data["username"] = str(self.username)
+            if (data["username"] == None and self.user.username !=None):
+                data["username"] = str(self.user.username)
 
             if("avatar_url" not in data.keys()):
-                data['avatar_url'] = self.avatar_url
+                data['avatar_url'] = self.user.avatar_url
 
         else:
             data = {}
@@ -90,18 +88,13 @@ class webhook(webhookMeta):
             if(result.status_code == 400):
                 raise BadRequest
 
-        return sentWebhook(address=self.address, data=data, message=message, response=result)
+        return sentWebhook(data=data, message=message, response=result, webhook = self)
 
-class sentWebhook(webhook):
+class sentWebhook():
 
-    def __init__(self, address: str, **kwargs):
+    def __init__(self, **kwargs):
 
-        if("username" in (kwargs["data"]).keys()):
-            super().__init__(address=address, username=(kwargs['data'])['username'])
-
-        else:
-            super().__init__(address=address)
-
+        self.webhook = kwargs['webhook']
         self.message = kwargs["message"]
         self.data = kwargs["data"]
         self.response = kwargs['response']
