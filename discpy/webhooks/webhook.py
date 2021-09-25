@@ -95,6 +95,7 @@ class sentWebhook():
     def __init__(self, **kwargs):
 
         self.webhook = kwargs['webhook']
+        self.user = self.webhook.user
         self.message = kwargs["message"]
         self.data = kwargs["data"]
         self.response = kwargs['response']
