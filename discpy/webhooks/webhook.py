@@ -64,7 +64,7 @@ class webhook(webhookMeta):
                 data["username"] = str(self.user.username)
 
             if("avatar_url" not in data.keys()):
-                data['avatar_url'] = self.user.avatar_url
+                data['avatar_url'] = self.user.icon_url
 
         else:
             data = {}
