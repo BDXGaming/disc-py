@@ -17,3 +17,13 @@ class RequestTimeout(Exception):
         pass
     def __str__(self):
         return "Webhook request has timed out!"
+
+
+class NoAddressGiven(Exception):
+    """
+    This error is raised when incomplete or incorrect webhook addresses are provided.
+    """
+    def __int__(self):
+        pass
+    def __str__(self):
+        return "No address or incorrect details provided for webhook!"

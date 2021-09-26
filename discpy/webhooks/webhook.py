@@ -2,7 +2,7 @@ import requests
 from requests import Timeout
 from discpy.user import baseUser
 from discpy import Embed
-from discpy.errors import BadRequest, RequestTimeout
+from discpy.errors import BadRequest, RequestTimeout, NoAddressGiven
 from discpy.webhooks.message import Message
 
 
@@ -12,10 +12,28 @@ class webhookMeta:
     '''
 
     def __init__(self, **kwargs):
+        _addressFormatBase = "https://discord.com/api/webhooks/"
 
         if kwargs.keys().__contains__("address"):
 
-            self._address = kwargs['address']
+            if(kwargs['address'].__contains__(_addressFormatBase)):
+                webhook_index = (kwargs['address']).index("webhooks/")
+                webhook_data = (kwargs['address'])[webhook_index+9:]
+
+                webhook_id = webhook_data[:webhook_data.index("/")]
+                webhook_token = webhook_data[webhook_data.index("/")+1:]
+
+                self._address = _addressFormatBase + f"{webhook_id}/{webhook_token}"
+
+            else:
+                raise NoAddressGiven
+
+        elif kwargs.keys().__contains__("webhook_id") and kwargs.keys().__contains__("webhook_token"):
+
+            self._address = _addressFormatBase + f"{kwargs['webhook_id']}/{kwargs['webhook_token']}"
+
+        else:
+            raise NoAddressGiven
 
     @property
     def address(self):
@@ -39,7 +57,7 @@ class webhook(webhookMeta):
         :param avatar_url:
         '''
         super().__init__(address=address)
-        self.user = baseUser(username= username, avatar_url = avatar_url)
+        self.user = baseUser(username= username, icon_url = avatar_url)
 
     def change_url(self, new_url):
         '''
@@ -60,7 +78,7 @@ class webhook(webhookMeta):
 
             data = message.to_dict()
 
-            if (data["username"] == None and self.user.username !=None):
+            if ("username" not in data.keys()):
                 data["username"] = str(self.user.username)
 
             if("avatar_url" not in data.keys()):
@@ -68,6 +86,12 @@ class webhook(webhookMeta):
 
         else:
             data = {}
+
+            if ("username" not in data.keys()):
+                data["username"] = str(self.user.username)
+
+            if("avatar_url" not in data.keys()):
+                data['avatar_url'] = self.user.icon_url
 
         if(embed != None):
             edata = embed.to_dict()
@@ -93,7 +117,10 @@ class webhook(webhookMeta):
 class sentWebhook():
 
     def __init__(self, **kwargs):
-
+        '''
+        Creates a new instance of the sent webhook object.
+        :param kwargs:
+        '''
         self.webhook = kwargs['webhook']
         self.user = self.webhook.user
         self.message = kwargs["message"]
