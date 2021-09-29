@@ -16,7 +16,7 @@ class webhookMeta:
 
         if kwargs.keys().__contains__("address"):
 
-            if(kwargs['address'].__contains__(_addressFormatBase)):
+            if(kwargs['address'].__contains__(_addressFormatBase[:-8])):
                 webhook_index = (kwargs['address']).index("webhooks/")
                 webhook_data = (kwargs['address'])[webhook_index+9:]
 
