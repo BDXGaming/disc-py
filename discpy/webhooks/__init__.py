@@ -1,2 +1,3 @@
-from .webhook import webhook
+from .webhook import Webhook
 from .message import Message
+

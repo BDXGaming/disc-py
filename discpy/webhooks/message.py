@@ -21,52 +21,41 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
-class messageMeta:
-    pass
-    # def __init__(self,**kwargs):
-    #     if ("username" in kwargs.keys()):
-    #         self.username = kwargs["username"]
-    #
-    #     else:
-    #         self.username = None
-    #
-    #     if ("avatar_url" in kwargs.keys()):
-    #         self.avatar_url = kwargs['avatar_url']
-    #
-    #     else:
-    #         self.avatar_url = None
 
-class Message(messageMeta):
-    '''
+
+class Message:
+    """
     The message object for webhooks
-    '''
+    """
 
     def __init__(self, **kwargs):
 
         self.content = kwargs['content']
 
-        if("username" in kwargs.keys()):
+        if "username" in kwargs.keys():
             self.username = kwargs["username"]
 
         else:
             self.username = None
 
-        if("avatar_url" in kwargs.keys()):
+        if "avatar_url" in kwargs.keys():
             self.avatar_url = kwargs['avatar_url']
 
         else:
             self.avatar_url = None
 
     def to_dict(self):
-        '''
+        """
         Converts the message object into a dict
         :return:
-        '''
+        """
 
         data = {}
-        data['username'] = self.username
 
-        if self.avatar_url != None:
+        if self.username is not None:
+            data['username'] = self.username
+
+        if self.avatar_url is not None:
             data['avatar_url'] = self.avatar_url
 
         data['content'] = self.content
