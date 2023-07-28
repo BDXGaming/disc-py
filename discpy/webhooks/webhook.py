@@ -24,7 +24,7 @@ SOFTWARE.
 
 import requests
 from requests import Timeout
-from discpy.user import baseUser
+from discpy.user import BaseUser
 from discpy import Embed
 from discpy.errors import BadRequest, RequestTimeout, NoAddressGiven
 from discpy.webhooks.message import Message
@@ -81,7 +81,7 @@ class Webhook(WebhookMeta):
         :param avatar_url:
         """
         super().__init__(address=address)
-        self.user = baseUser(username=username, icon_url=avatar_url)
+        self.user = BaseUser(username=username, icon_url=avatar_url)
 
     def change_url(self, new_url):
         """
@@ -129,7 +129,7 @@ class Webhook(WebhookMeta):
             print(result)
 
             if result.status_code == 400:
-                raise BadRequest
+                raise BadRequest()
 
         return SentWebhook(data=data, message=message, response=result, webhook=self)
 
@@ -147,3 +147,4 @@ class SentWebhook:
         self.message = kwargs["message"]
         self.data = kwargs["data"]
         self.response = kwargs['response']
+

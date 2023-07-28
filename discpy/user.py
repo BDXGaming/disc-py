@@ -22,7 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-class baseUser:
+
+class BaseUser:
 
     def __init__(self, **kwargs):
 
@@ -37,7 +38,7 @@ class baseUser:
         return self._username
 
     @username.setter
-    def username(self, new_username:str):
+    def username(self, new_username: str):
         self._username = new_username
 
     @property
@@ -45,20 +46,20 @@ class baseUser:
         return self._icon_url
 
     @icon_url.setter
-    def icon_url(self, new_avatar_url:str):
+    def icon_url(self, new_avatar_url: str):
         self._icon_url = new_avatar_url
 
     def to_dict(self):
-        '''
+        """
         Converts the cls to a dict that can be used for webhook embeds
         :return:
-        '''
+        """
         dict = {}
 
-        if self._username != None:
+        if self._username is not None:
             dict['name'] = self._username
 
-        if self._icon_url != None:
+        if self._icon_url is not None:
             dict['icon_url'] = self._icon_url
 
         return dict
